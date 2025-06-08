@@ -24,7 +24,6 @@ export async function signUp(prevState: State, formData: FormData){
                 password: password,
             }
         })
-        redirect("/dashboard");
     }catch(err){
         if(err instanceof APIError){
             switch(err.status){
@@ -37,6 +36,7 @@ export async function signUp(prevState: State, formData: FormData){
             }
         }
     }
+    redirect("/dashboard");
 }
 
 export async function signIn(prevState: State, formData: FormData){
