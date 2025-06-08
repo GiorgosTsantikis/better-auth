@@ -5,6 +5,8 @@ import {Input} from "@/components/ui/input";
 import {forgetPassword} from "@/lib/auth/auth-client";
 import {useState} from "react";
 import React from "react";
+import {cookies} from "next/headers";
+import Cookies from "js-cookie";
 
 export default function ForgotAccountPage(){
     const [email, setEmail] = useState("");
@@ -17,7 +19,6 @@ export default function ForgotAccountPage(){
             setMessage("Please enter a valid email");
             return;
         }
-        console.log(await fetch("http://localhost:8081/user/profile/"+email));
         const {error} = await forgetPassword({
             email:email,
             redirectTo:`${window.location.origin}/login/forgot-password/reset-password`

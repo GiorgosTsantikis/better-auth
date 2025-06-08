@@ -23,6 +23,7 @@ export default async function Page() {
   if(!session) {
     return <div> Not authenticated</div>
   }
+
   const user = session.user;
   return (
     <SidebarProvider>

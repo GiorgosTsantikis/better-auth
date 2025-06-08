@@ -38,6 +38,12 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   if(!user){return (<div>An error has occured please refresh</div>)}
+  async function cookie(){
+    console.log("fetch",await fetch("http://localhost:8081/user/profile/email",{
+      credentials: "include"
+    }));
+  }
+  cookie().then(r => console.log("done"));
 
   return (
     <SidebarMenu>

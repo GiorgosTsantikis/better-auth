@@ -1,6 +1,7 @@
 import {betterAuth} from "better-auth";
 import {Pool} from "pg";
 import {nextCookies} from "better-auth/next-js";
+import {jwt} from "better-auth/plugins";
 
 //TODO with backend
 async function sendEmail({to, subject, text}:{to: string, subject: string, text: string}){
@@ -25,6 +26,14 @@ export const auth = betterAuth({
             });
         }
     },
+    session: {
+      expiresIn: 60 * 60 * 10,
+      updateAge: 60 * 60,
+      cookieCache: {
+          enabled: true,
+          maxAge: 10 * 60,
+      }
+    },
     account: {
         accountLinking: {
             enabled: true,
@@ -36,5 +45,5 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
         },
     },
-    plugins: [nextCookies()],
+    plugins: [nextCookies(), jwt()],
 });

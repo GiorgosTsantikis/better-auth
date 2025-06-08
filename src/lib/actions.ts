@@ -3,6 +3,7 @@
 import {auth} from "@/lib/auth/auth";
 import {APIError} from "better-auth/api";
 import {redirect} from "next/navigation";
+import {revokeOtherSessions, revokeSessions} from "@/lib/auth/auth-client";
 
 type State = {
     errorMessage?: string | null;
@@ -47,12 +48,12 @@ export async function signIn(prevState: State, formData: FormData){
     console.log('data', formData);
     const {email,password} = rawFormData;
     try{
-        await auth.api.signInEmail({
+        const resp = await auth.api.signInEmail({
             body: {
                 email: email,
                 password: password,
             }
-        })
+        });
     }catch(err){
         if(err instanceof APIError){
             switch(err.status){
