@@ -7,9 +7,11 @@ async function sendEmail({to, subject, text}:{to: string, subject: string, text:
     await new Promise(resolve => setTimeout(resolve, 1));
     console.log(to, subject, text);
 }
+const dbConn = process.env.DB_CONNECTION_STRING;
+console.log("dbConn",dbConn);
 export const auth = betterAuth({
     database: new Pool({
-        connectionString: "postgres://postgres:postgres@localhost:5432/db"
+        connectionString: dbConn
     }),
     emailAndPassword: {
         enabled: true,

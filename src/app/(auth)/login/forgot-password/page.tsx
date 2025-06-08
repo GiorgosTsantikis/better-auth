@@ -9,7 +9,7 @@ import React from "react";
 export default function ForgotAccountPage(){
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
-
+4
     //TODO backend api-call
     async function handleSubmit(e : React.FormEvent){
         e.preventDefault();
@@ -17,10 +17,12 @@ export default function ForgotAccountPage(){
             setMessage("Please enter a valid email");
             return;
         }
+        console.log(await fetch("http://localhost:8081/user/profile/"+email));
         const {error} = await forgetPassword({
             email:email,
             redirectTo:`${window.location.origin}/login/forgot-password/reset-password`
         });
+        console.log("forgot-password error",error);
         if(error){
             setMessage("Something went wrong");
         }else{
