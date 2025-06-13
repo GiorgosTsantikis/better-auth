@@ -4,24 +4,40 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
-import {useActionState, useEffect} from "react";
-import {signIn} from "@/lib/actions";
+import {useEffect} from "react";
+import {signIn} from "@/lib/auth/auth-client";
 import {toast} from "sonner";
 import SignInSocial from "@/components/auth/sign-in-social";
+import {useForm} from "react-hook-form";
+type LoginForm = {
+    email: string
+    password: string
+}
 
 export default function LoginForm() {
-    const initialState = {errorMessage:""};
-    const [state, formAction, pending] = useActionState(signIn, initialState);
+    const {register, handleSubmit, formState: {errors, isSubmitting},} = useForm<LoginForm>();
+
+    async function onSubmit(data: LoginForm){
+        const res = await signIn.email({
+            email:data.email,
+                password:data.password,
+            callbackURL: "/dashboard"
+            });
+        if(res.data && res.data.token){
+            console.log("jwt on login",res.data.token);
+        }
+    }
 
     useEffect(() => {
-        if(state.errorMessage.length){
-            toast.error(state.errorMessage)
+        if(errors.email || errors.password){
+            toast.error(errors.email ? errors.email.message : errors.password?.message)
         }
-    }, [state.errorMessage])
+    }, [errors])
+
     return (
         <section className="flex min-h-screen bg-zinc-50 px-4 py-16 md:py-32 dark:bg-transparent">
             <form
-                action={formAction}
+                onSubmit={handleSubmit(onSubmit)}
                 className="bg-card m-auto h-fit w-full max-w-sm rounded-[calc(var(--radius)+.125rem)] border p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]">
                 <div className="p-8 pb-6">
                     <div>
@@ -65,44 +81,41 @@ export default function LoginForm() {
                             <Label
                                 htmlFor="email"
                                 className="block text-sm">
-                                Username
+                                Email
                             </Label>
                             <Input
-                                type="email"
-                                required
-                                name="email"
                                 id="email"
+                                {...register("email",{required:"Email is requrired"})}
                             />
                         </div>
 
                         <div className="space-y-0.5">
                             <div className="flex items-center justify-between">
                                 <Label
-                                    htmlFor="pwd"
+                                    htmlFor="password"
                                     className="text-title text-sm">
                                     Password
                                 </Label>
-                                <Button
-                                    asChild
-                                    variant="link"
-                                    size="sm">
-                                    <Link
-                                        href="/login/forgot-password"
-                                        className="link intent-info variant-ghost text-sm">
-                                        Forgot your Password ?
-                                    </Link>
-                                </Button>
+
                             </div>
                             <Input
-                                type="password"
-                                required
-                                name="pwd"
-                                id="pwd"
+                                id="password"
+                                {...register("password",{required:"Password is required"})}
                                 className="input sz-md variant-mixed"
                             />
                         </div>
+                        <Button
+                            asChild
+                            variant="link"
+                            size="sm">
+                            <Link
+                                href="/login/forgot-password"
+                                className="link intent-info variant-ghost text-sm">
+                                Forgot your Password ?
+                            </Link>
+                        </Button>
 
-                        <Button className="w-full" disabled={pending}>Sign In</Button>
+                        <Button className="w-full" disabled={isSubmitting}>Sign In</Button>
                     </div>
                 </div>
 

@@ -1,16 +1,23 @@
 import {betterAuth} from "better-auth";
 import {Pool} from "pg";
 import {nextCookies} from "better-auth/next-js";
-import {jwt} from "better-auth/plugins";
+import {admin as adminPlugin, phoneNumber, jwt, openAPI} from "better-auth/plugins";
+import {ac, admin, user} from "@/lib/auth/permissions";
 
-//TODO with backend
+async function sendOneTimePass({phoneNumber, code}:{phoneNumber:string,code:string},request:any){
+    //todo
+    await new Promise(resolve => setTimeout(resolve, 1));
+    console.log(phoneNumber, code);
+}
+
 async function sendEmail({to, subject, text}:{to: string, subject: string, text: string}){
+    //TODO with backend
     await new Promise(resolve => setTimeout(resolve, 1));
     console.log(to, subject, text);
 }
 const dbConn = process.env.DB_CONNECTION_STRING;
 console.log("dbConn",dbConn);
-export const auth = betterAuth({
+export const auth =  betterAuth({
     database: new Pool({
         connectionString: dbConn
     }),
@@ -45,5 +52,16 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET as string
         },
     },
-    plugins: [nextCookies(), jwt()],
+    plugins: [
+        nextCookies(),
+        jwt({
+            jwt:{
+                expirationTime: "1m"
+            }
+        }),
+        adminPlugin({ac, roles:{admin,user}}),
+        phoneNumber({
+            sendOTP: sendOneTimePass,
+        }),
+    openAPI()],
 });

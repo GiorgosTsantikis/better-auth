@@ -30,20 +30,26 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import {User} from "@/model/db/User";
+import {useEffect, useState} from "react";
 
-export function NavUser({
-  user,
-}: {
-  user: User | undefined
-}) {
+export function NavUser({user,}: { user: User | undefined }) {
+
+  const [token, setToken] = useState("");
   const { isMobile } = useSidebar()
-  if(!user){return (<div>An error has occured please refresh</div>)}
-  async function cookie(){
-    console.log("fetch",await fetch("http://localhost:8081/user/profile/email",{
-      credentials: "include"
-    }));
-  }
-  cookie().then(r => console.log("done"));
+
+  useEffect(() => {
+    async function getJWT(){
+      console.log("nav-user token:",)
+     // await fetch("/api/auth/token", {
+       // headers: {
+       //   "Authorization": `Bearer ${token}`
+      //  },
+     // })
+    }
+    getJWT();
+  }, []);
+
+if(!user){return <div>NO DATA</div>}
 
   return (
     <SidebarMenu>
@@ -55,11 +61,11 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatarUrl ? user.avatarUrl : ""} alt={user.username ? user.username : ""} />
+                <AvatarImage src={user.image ? user.image : ""} alt={user.name ? user.name : ""} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.username}</span>
+                <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -74,11 +80,11 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatarUrl ? user.avatarUrl : ""} alt={user.username ? user.username : ""} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarImage src={user.image ? user.image : ""} alt={user.name ? user.name : ""} />
+                  <AvatarFallback className="rounded-lg">Jeff</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.username}</span>
+                  <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>

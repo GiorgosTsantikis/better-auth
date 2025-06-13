@@ -5,8 +5,6 @@ import {Input} from "@/components/ui/input";
 import {forgetPassword} from "@/lib/auth/auth-client";
 import {useState} from "react";
 import React from "react";
-import {cookies} from "next/headers";
-import Cookies from "js-cookie";
 
 export default function ForgotAccountPage(){
     const [email, setEmail] = useState("");

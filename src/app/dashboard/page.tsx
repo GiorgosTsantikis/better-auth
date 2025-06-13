@@ -17,17 +17,15 @@ import {auth} from "@/lib/auth/auth";
 import {headers} from "next/headers";
 
 export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  const session = await auth.api.getSession({headers: await headers()});
+  console.log("dashboard session", session);
   if(!session) {
     return <div> Not authenticated</div>
   }
 
-  const user = session.user;
   return (
     <SidebarProvider>
-      <AppSidebar user={user}/>
+      <AppSidebar session={session} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
